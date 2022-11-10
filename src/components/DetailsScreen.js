@@ -2,7 +2,7 @@ import React from 'react';
 import {SafeAreaView, StyleSheet, View, Text, Image,ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLORS from '../const/color';
-// import {SecondaryButton} from '../const/Button';
+import {SecondaryButton} from '../const/Button';
 
 const DetailsScreen = ({navigation, route}) => {
   const food = route.params;
@@ -45,7 +45,7 @@ const DetailsScreen = ({navigation, route}) => {
             only five centuries.
           </Text>
           <View style={{marginTop: 40, marginBottom: 40}}>
-            {/* <SecondaryButton title="Add To Cart" /> */}
+            <SecondaryButton title="Add To Cart" />
           </View>
         </View>
       </ScrollView>

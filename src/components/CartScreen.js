@@ -1,27 +1,67 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet, View, Text, Image,FlatList} from 'react-native';
+import {SafeAreaView, StyleSheet, View, Text, Image,FlatList, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLORS from '../const/color';
 import {addDoc, collection,doc, deleteDoc,getDocs,query,where} from 'firebase/firestore';
 import { db } from '../config/firebase';
+import { PrimaryButton } from '../const/Button';
+
 
 
 
 
 const CartScreen = ({navigation}) => {
   const [foods,setFoods]= React.useState([]);
+  const [num,setnum]=React.useState(1);
+  
+
+  let count = 1
+
+ 
+
+   
+  let cart=[]
 
 
   const cartRef = collection(db,"cart");
+
+
 
   const getItems = async()=>{
       
     console.log(cartRef);
   
     let data = await getDocs(cartRef);
-     setFoods(data.docs.map((doc)=>({...doc.data(), id: doc.id})))
-    
+
+    const q = query(collection(db, "cart"));
+    const querySnapshot = await getDocs(q)
+    // const userT=auth.currentUser
+
+    // querySnapshot.forEach((doc) => {
+    //   let num = doc.data().num
+    // })
+
+//////////////////////////////////////////////////
+
+    data.docs.map((doc)=>{
+      cart.push({ ...doc.data(),id: doc.id,num:num})
+
+      
     }
+     )
+
+     setFoods(cart)
+    }
+
+
+    const up = async()=>{
+      // count = count+1
+      // console.log(count)
+       setnum(count+1)
+      console.log(num)
+    }
+
+
 
     React.useEffect(()=>{
       console.log("some")
@@ -45,14 +85,14 @@ const CartScreen = ({navigation}) => {
           <Text style={{fontSize: 13, color: COLORS.grey}}>
             {item.ingridients}
           </Text>
-          <Text style={{fontSize: 17, fontWeight: 'bold', color: COLORS.white}}>${item.price}</Text>
+          <Text style={{fontSize: 17, fontWeight: 'bold', color: COLORS.white}}>R{item.price}</Text>
         </View>
         <View style={{marginRight: 20, alignItems: 'center'}}>
           
           <View style={style.actionBtn}>
+            <TouchableOpacity onPress={up}><Icon name="add" size={25} color={COLORS.white} /></TouchableOpacity>
+            <Text style={{fontWeight: 'bold', fontSize: 18,textAlign:'center'}}>{item.num}</Text>
             <Icon name="remove" size={25} color={COLORS.white} />
-            <Text style={{fontWeight: 'bold', fontSize: 18}}>3</Text>
-            <Icon name="add" size={25} color={COLORS.white} />
           </View>
         </View>
       </View>
@@ -67,7 +107,7 @@ const CartScreen = ({navigation}) => {
       <FlatList
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: 80}}
-        data={foods}
+        data={cart}
         renderItem={({item}) => <CartCard item={item} />}
         ListFooterComponentStyle={{paddingHorizontal: 20, marginTop: 20}}
         ListFooterComponent={() => (
@@ -84,7 +124,7 @@ const CartScreen = ({navigation}) => {
               <Text style={{fontSize: 18, fontWeight: 'bold',color:COLORS.white}}>$50</Text>
             </View>
             <View style={{marginHorizontal: 30}}>
-              {/* <PrimaryButton title="CHECKOUT" /> */}
+              <PrimaryButton title="CHECKOUT" />
             </View>
           </View>
         )}

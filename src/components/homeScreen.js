@@ -40,7 +40,7 @@ const HomeScreen = ({navigation, route}) => {
     const [foodPrice,setFoodPrice]=React.useState('')
     const [addCart,setAddCart]=React.useState(false)
 
-    const cart = [];
+    const foodCategory = [];
     const theFoods = [];
 
     const foodRef =collection(db,"foods");
@@ -79,15 +79,42 @@ const HomeScreen = ({navigation, route}) => {
 
 
 
-      const addToCart = async() =>{
-       
-        setAddCart(true);
+      const food = async() =>{
 
-      console.log(foods)
+        console.log(categories)
 
-      foods.forEach((doc) => {
-        console.log(doc.name)
-      })
+            const q = query(collection(db, "foods"),where("category","==","food")); 
+            const querySnapshot = await getDocs(q)
+            const qd = query(collection(db, "foods"),where("category","==","desert")); 
+            const querySnapshotdesert = await getDocs(qd)
+            const qdr = query(collection(db, "foods"),where("category","==","drink")); 
+            const querySnapshotdrink = await getDocs(qdr)
+
+        categories.map((category) => {
+          if(category.name == 'food'){
+           
+            querySnapshot.forEach((doc) => {
+              console.log(doc.data().name)
+              foodCategory.push({name:doc.data().name,price:doc.data().price,ingridients:doc.data().ingridients})
+            })
+          }else
+          if(category.name == 'desert'){
+           
+            querySnapshotdesert.forEach((doc) => {
+              console.log(doc.data().name)
+              foodCategory.push({name:doc.data().name,price:doc.data().price,ingridients:doc.data().ingridients})
+            })
+          }else
+          if(category.name == 'drink'){
+           
+            querySnapshotdrink.forEach((doc) => {
+              console.log(doc.data().name)
+              foodCategory.push({name:doc.data().name,price:doc.data().price,ingridients:doc.data().ingridients})
+            })
+          }
+
+        })
+       setFoods(foodCategory)
      
      }
      
@@ -125,26 +152,20 @@ const HomeScreen = ({navigation, route}) => {
 
     const ListCategories = () => {
         return (
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={style.categoriesListContainer}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={style.categoriesListContainer}>
 
 
             {categories.map((category, index) => (
 
-              <TouchableOpacity key={index} activeOpacity={0.8} onPress={() => setSelectedCategoryIndex(index)}>
+              <TouchableOpacity key={index} activeOpacity={0.8} onPress={() => {setSelectedCategoryIndex(index)}}>
+
                 <View style={{backgroundColor: selectedCategoryIndex == index ? COLORS.primary : COLORS.secondary, ...style.categoryBtn, }}>
 
                   <View style={style.categoryBtnImgCon}>
                     <Image source={category.image} style={{height: 35, width: 35, resizeMode: 'cover',borderRadius:20}}/>
                   </View>
 
-                  <Text style={{fontSize: 15, fontWeight: 'bold', marginLeft: 10,
-                      color: selectedCategoryIndex == index
-                          ? COLORS.dark
-                          : COLORS.primary,
-                    }}>
+                  <Text style={{fontSize: 15, fontWeight: 'bold', marginLeft: 10, color: selectedCategoryIndex == index ? COLORS.dark: COLORS.primary,}}>
 
                     {category.name}
 
@@ -200,7 +221,7 @@ const HomeScreen = ({navigation, route}) => {
                                   <TouchableOpacity style={style.addToCartBtn} onPress={async() =>  
                                       { 
    
-                                        await  addDoc(collection(db,"cart"),{foodName:food.name,price:food.price,ingridients:food.ingridients})
+                                        await  addDoc(collection(db,"cart"),{foodName:food.name,price:food.price,ingridients:food.ingridients,num:1})
                                         console.log('added')
                                       }
                                     }
