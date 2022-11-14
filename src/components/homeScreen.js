@@ -18,7 +18,7 @@ import {
 //styling imports
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLORS from '../const/color';
-import categories from '../const/categories';
+// import categories from '../const/categories';
 
 
 //firebase imports
@@ -27,6 +27,7 @@ import {addDoc, collection,doc, deleteDoc,getDocs,query,where} from 'firebase/fi
 import { async } from '@firebase/util';
 import { auth } from '../config/firebase';
 // import BottomNavigator from '../const/bottomNav';
+
 
 
 const {width} = Dimensions.get('screen');
@@ -41,6 +42,8 @@ const HomeScreen = ({navigation, route}) => {
     const [addCart,setAddCart]=React.useState(false)
 
     const foodCategory = [];
+    const dessertCategory = [];
+    const drinksCategory = [];
     const theFoods = [];
 
     const foodRef =collection(db,"foods");
@@ -49,6 +52,8 @@ const HomeScreen = ({navigation, route}) => {
 
     const user = auth.currentUser;
     console.log(user);
+
+    
 
 
   
@@ -68,7 +73,7 @@ const HomeScreen = ({navigation, route}) => {
         querySnapshot.forEach((doc) => {
         
           console.log(doc.data())
-          theFoods.push({id:doc.id , name: doc.data().name,ingridients:doc.data().ingridients, price:doc.data().price,cart:addCart})
+          theFoods.push({id:doc.id , name: doc.data().name,ingridients:doc.data().ingridients, price:doc.data().price,cart:addCart,image:doc.data().image})
       });
 
 
@@ -81,42 +86,50 @@ const HomeScreen = ({navigation, route}) => {
 
       const food = async() =>{
 
-        console.log(categories)
+        // console.log(categories)
 
             const q = query(collection(db, "foods"),where("category","==","food")); 
             const querySnapshot = await getDocs(q)
-            const qd = query(collection(db, "foods"),where("category","==","desert")); 
-            const querySnapshotdesert = await getDocs(qd)
-            const qdr = query(collection(db, "foods"),where("category","==","drink")); 
-            const querySnapshotdrink = await getDocs(qdr)
-
-        categories.map((category) => {
-          if(category.name == 'food'){
-           
+          
             querySnapshot.forEach((doc) => {
               console.log(doc.data().name)
-              foodCategory.push({name:doc.data().name,price:doc.data().price,ingridients:doc.data().ingridients})
+              foodCategory.push({name:doc.data().name,price:doc.data().price,ingridients:doc.data().ingridients,image:doc.data().image})
             })
-          }else
-          if(category.name == 'desert'){
-           
-            querySnapshotdesert.forEach((doc) => {
-              console.log(doc.data().name)
-              foodCategory.push({name:doc.data().name,price:doc.data().price,ingridients:doc.data().ingridients})
-            })
-          }else
-          if(category.name == 'drink'){
-           
-            querySnapshotdrink.forEach((doc) => {
-              console.log(doc.data().name)
-              foodCategory.push({name:doc.data().name,price:doc.data().price,ingridients:doc.data().ingridients})
-            })
-          }
-
-        })
+            console.log(foodCategory)
+          // }
        setFoods(foodCategory)
      
      }
+     const dessert = async() =>{
+
+          const q = query(collection(db, "foods"),where("category","==","desert")); 
+          const querySnapshot = await getDocs(q)
+        
+          querySnapshot.forEach((doc) => {
+            console.log(doc.data().name)
+            dessertCategory.push({name:doc.data().name,price:doc.data().price,ingridients:doc.data().ingridients,image:doc.data().image})
+          })
+          console.log(dessertCategory)
+        // }
+     setFoods(dessertCategory)
+   
+   }
+   const drinks = async() =>{
+
+    // console.log(categories)
+
+        const q = query(collection(db, "foods"),where("category","==","drink")); 
+        const querySnapshot = await getDocs(q)
+      
+        querySnapshot.forEach((doc) => {
+          console.log(doc.data().name)
+          drinksCategory.push({name:doc.data().name,price:doc.data().price,ingridients:doc.data().ingridients,image:doc.data().image})
+        })
+        console.log(drinksCategory)
+      // }
+   setFoods(drinksCategory)
+ 
+ }
      
 
 
@@ -140,7 +153,7 @@ const HomeScreen = ({navigation, route}) => {
         }
         
       }
-      
+
 
       React.useEffect(()=>{
         console.log("some")
@@ -155,27 +168,53 @@ const HomeScreen = ({navigation, route}) => {
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={style.categoriesListContainer}>
 
 
-            {categories.map((category, index) => (
+          
 
-              <TouchableOpacity key={index} activeOpacity={0.8} onPress={() => {setSelectedCategoryIndex(index)}}>
+            <TouchableOpacity activeOpacity={0.8} onPress={food}>
 
-                <View style={{backgroundColor: selectedCategoryIndex == index ? COLORS.primary : COLORS.secondary, ...style.categoryBtn, }}>
+              <View style={{backgroundColor: selectedCategoryIndex  ? COLORS.primary : COLORS.secondary, ...style.categoryBtn, }}>
 
-                  <View style={style.categoryBtnImgCon}>
-                    <Image source={category.image} style={{height: 35, width: 35, resizeMode: 'cover',borderRadius:20}}/>
-                  </View>
-
-                  <Text style={{fontSize: 15, fontWeight: 'bold', marginLeft: 10, color: selectedCategoryIndex == index ? COLORS.dark: COLORS.primary,}}>
-
-                    {category.name}
-
-                  </Text>
-
+                <View style={style.categoryBtnImgCon}>
+                  <Image source={require('../const/asserts/catergories/burger.png')} style={{height: 35, width: 35, resizeMode: 'cover',borderRadius:20}}/>
                 </View>
-              </TouchableOpacity>
-            ))
-            }
-          </ScrollView>
+
+                <Text style={{fontSize: 15, fontWeight: 'bold', marginLeft: 10, color: selectedCategoryIndex ? COLORS.dark: COLORS.primary,}}>
+                  food
+                </Text>
+
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity activeOpacity={0.8} onPress={dessert}>
+              <View style={{backgroundColor: selectedCategoryIndex  ? COLORS.primary : COLORS.secondary, ...style.categoryBtn, }}>
+
+                <View style={style.categoryBtnImgCon}>
+                  <Image source={require('../const/asserts/catergories/dessert.jpg')} style={{height: 35, width: 35, resizeMode: 'cover',borderRadius:20}}/>
+                </View>
+
+                <Text style={{fontSize: 15, fontWeight: 'bold', marginLeft: 10, color: selectedCategoryIndex ? COLORS.dark: COLORS.primary,}}>
+                  Dessert
+                </Text>
+
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity activeOpacity={0.8} onPress={drinks}>
+              <View style={{backgroundColor: selectedCategoryIndex  ? COLORS.primary : COLORS.secondary, ...style.categoryBtn, }}>
+
+                <View style={style.categoryBtnImgCon}>
+                  <Image source={require('../const/asserts/catergories/drink.jpg')} style={{height: 35, width: 35, resizeMode: 'cover',borderRadius:20}}/>
+                </View>
+
+                <Text style={{fontSize: 15, fontWeight: 'bold', marginLeft: 10, color: selectedCategoryIndex ? COLORS.dark: COLORS.primary,}}>
+                  drink
+                </Text>
+
+              </View>
+            </TouchableOpacity>
+         
+         
+        </ScrollView>
         );
       };
 
@@ -188,19 +227,19 @@ const HomeScreen = ({navigation, route}) => {
           <View style={{display:'flex',flexDirection:'row',flexWrap:'wrap',padding:10}}>
                 {
                   
-                  foods.map(food=>((
+                  foods.map((food,index)=>((
 
                         <TouchableHighlight
                         underlayColor={COLORS.white}
                         activeOpacity={0.9}
-                        onPress={() => navigation.navigate('detail',food)}
-                        key={food.id}> 
+                        onPress={() => navigation.navigate('detail',food) }
+                        key={index}> 
                       
                             
                             <View style={style.card} > 
                                 
                                 <View style={{alignItems: 'center', top: -40}}>
-                                  <Image source={require('../const/asserts/catergories/drink.jpg')} style={{height: 120, width: 120,borderRadius:100}} />
+                                  <Image source={food.image} style={{height: 120, width: 120,borderRadius:100}} />
                                 </View>
                                 <View style={{marginHorizontal: 20}}>
                                   <Text style={{fontSize: 18, fontWeight: 'bold',color:COLORS.white}}>{food.name}</Text>
@@ -221,8 +260,9 @@ const HomeScreen = ({navigation, route}) => {
                                   <TouchableOpacity style={style.addToCartBtn} onPress={async() =>  
                                       { 
    
-                                        await  addDoc(collection(db,"cart"),{foodName:food.name,price:food.price,ingridients:food.ingridients,num:1})
+                                        await  addDoc(collection(db,"cart"),{foodName:food.name,price:food.price,ingridients:food.ingridients,num:1,image:food.image})
                                         console.log('added')
+                                        console.log(food.image)
                                       }
                                     }
                                     >

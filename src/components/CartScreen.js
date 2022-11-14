@@ -20,7 +20,7 @@ const CartScreen = ({navigation}) => {
  
 
    
-  let cart=[]
+  const cart=[]
 
 
   const cartRef = collection(db,"cart");
@@ -32,25 +32,13 @@ const CartScreen = ({navigation}) => {
     console.log(cartRef);
   
     let data = await getDocs(cartRef);
+      setFoods(data.docs.map((doc)=>({...doc.data(),id: doc.id})))
 
-    const q = query(collection(db, "cart"));
-    const querySnapshot = await getDocs(q)
-    // const userT=auth.currentUser
-
-    // querySnapshot.forEach((doc) => {
-    //   let num = doc.data().num
-    // })
-
-//////////////////////////////////////////////////
-
-    data.docs.map((doc)=>{
-      cart.push({ ...doc.data(),id: doc.id,num:num})
+      // console.log(foodRef);
+    
+   
 
       
-    }
-     )
-
-     setFoods(cart)
     }
 
 
@@ -107,7 +95,7 @@ const CartScreen = ({navigation}) => {
       <FlatList
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: 80}}
-        data={cart}
+        data={foods}
         renderItem={({item}) => <CartCard item={item} />}
         ListFooterComponentStyle={{paddingHorizontal: 20, marginTop: 20}}
         ListFooterComponent={() => (

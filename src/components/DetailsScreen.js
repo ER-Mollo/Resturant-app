@@ -8,10 +8,10 @@ const DetailsScreen = ({navigation, route}) => {
   const food = route.params;
 
   return (
-    <SafeAreaView style={{backgroundColor: COLORS.white}}>
+    <SafeAreaView style={{backgroundColor: COLORS.dark}}>
       <View style={style.header}>
-        <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} />
-        <Text style={{fontSize: 20, fontWeight: 'bold'}}>Details</Text>
+        <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} style={{color:COLORS.light}} />
+        <Text style={{fontSize: 20, fontWeight: 'bold',color: COLORS.light}}>Details</Text>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View
@@ -20,7 +20,7 @@ const DetailsScreen = ({navigation, route}) => {
             alignItems: 'center',
             height: 280,
           }}>
-          <Image source={''} style={{height: 220, width: 220}} />
+          <Image source={food.image} style={{height: 220, width: 220}} />
         </View>
         <View style={style.details}>
           <View
