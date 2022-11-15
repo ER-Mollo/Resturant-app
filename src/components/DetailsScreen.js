@@ -7,6 +7,11 @@ import {SecondaryButton} from '../const/Button';
 const DetailsScreen = ({navigation, route}) => {
   const food = route.params;
 
+  const addToCart = async() =>{
+    await  addDoc(collection(db,"cart"),{foodName:food.name,price:food.price,ingridients:food.ingridients,num:1,image:food.image})
+    console.log('added');
+  }
+
   return (
     <SafeAreaView style={{backgroundColor: COLORS.dark}}>
       <View style={style.header}>
@@ -45,7 +50,7 @@ const DetailsScreen = ({navigation, route}) => {
             only five centuries.
           </Text>
           <View style={{marginTop: 40, marginBottom: 40}}>
-            <SecondaryButton title="Add To Cart" />
+            <SecondaryButton title="Add To Cart" onPress={addToCart}/>
           </View>
         </View>
       </ScrollView>

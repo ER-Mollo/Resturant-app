@@ -26,6 +26,7 @@ import { db } from '../config/firebase';
 import {addDoc, collection,doc, deleteDoc,getDocs,query,where} from 'firebase/firestore';
 import { async } from '@firebase/util';
 import { auth } from '../config/firebase';
+// import Icon from 'react-native-vector-icons/MaterialIcons';
 // import BottomNavigator from '../const/bottomNav';
 
 
@@ -56,6 +57,14 @@ const HomeScreen = ({navigation, route}) => {
     
 
 
+    const signOut = async()=>{
+      auth
+      .signOut()
+      .then(() => console.log('User signed out!'));
+      navigation.push('Login')
+     
+      
+  }
   
 
     const getItems = async()=>{
@@ -239,7 +248,7 @@ const HomeScreen = ({navigation, route}) => {
                             <View style={style.card} > 
                                 
                                 <View style={{alignItems: 'center', top: -40}}>
-                                  <Image source={food.image} style={{height: 120, width: 120,borderRadius:100}} />
+                                  <Image source={food.image} style={{height: 120, width: 120}} />
                                 </View>
                                 <View style={{marginHorizontal: 20}}>
                                   <Text style={{fontSize: 18, fontWeight: 'bold',color:COLORS.white}}>{food.name}</Text>
@@ -290,12 +299,20 @@ const HomeScreen = ({navigation, route}) => {
                         <Text style={{fontSize: 28, fontWeight: 'bold', marginLeft: 10, color: COLORS.white}}>
                         {user.displayName}
                         </Text>
+                       
                     </View>
                 </View>
-                <Image
-                source={require('../../assets/icon.png')}
-                style={{height: 50, width: 50, borderRadius: 25, paddingBottom:15}}
-                />
+                <View style={{display:'flex',flexDirection: 'row',justifyContent:'space-between'}}>
+                  <Image
+                    source={require('../../assets/icon.png')}
+                    style={{height: 50, width: 50, borderRadius: 25}}
+                    />
+                  <TouchableOpacity style={{paddingLeft:10, paddingTop:15}} onPress={signOut}>
+                      <Icon name="logout" size={20} color={COLORS.primary}/>
+                  </TouchableOpacity>
+
+                </View>
+                
             </View>
 
             <View style={{ marginTop: 40, flexDirection: 'row', paddingHorizontal: 20,}}>
@@ -325,7 +342,7 @@ const HomeScreen = ({navigation, route}) => {
 
 const style = StyleSheet.create({
     header: {
-      marginTop: 20,
+      marginTop: 10,
       flexDirection: 'row',
       justifyContent: 'space-between',
       paddingHorizontal: 20,
@@ -379,6 +396,8 @@ const style = StyleSheet.create({
       marginTop: 50,
       borderRadius: 15,
       elevation: 13,
+      borderColor:COLORS.secondary,
+      borderWidth: 1,
       backgroundColor: COLORS.dark,//come back
     },
     cardScroll:{

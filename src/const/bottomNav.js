@@ -6,11 +6,20 @@ import COLORS from './color';
 import {View} from 'react-native';
 import HomeScreen from '../components/homeScreen';
 import CartScreen from '../components/CartScreen';
+import LoginScreen from '../components/loginScreen';
 // import CartScreen
 
 const Tab = createBottomTabNavigator();
 
 const BottomNavigator = () => {
+
+  const signOut = async()=>{
+    auth
+    .signOut()
+    .then(() => console.log('User signed out!'));
+   
+    
+}
   return (
     <Tab.Navigator
       tabBarOptions={{
@@ -25,6 +34,7 @@ const BottomNavigator = () => {
       <Tab.Screen
         name="HomeScreen"
         component={HomeScreen}
+        onPress={signOut}
         options={{
           tabBarIcon: ({color}) => (
             <Icon name="home-filled" color={color} size={28} />
@@ -34,11 +44,11 @@ const BottomNavigator = () => {
 
 
       <Tab.Screen
-        name="LocalMall"
-        component={HomeScreen}
+        name="Favorite"
+        component={CartScreen}
         options={{
           tabBarIcon: ({color}) => (
-            <Icon name="local-mall" color={color} size={28} />
+            <Icon name="favorite" color={color} size={28} />
           ),headerShown:false
         }}
       />
@@ -66,20 +76,20 @@ const BottomNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Favorite"
-        component={HomeScreen}
-        options={{
-          tabBarIcon: ({color}) => (
-            <Icon name="favorite" color={color} size={28} />
-          ),headerShown:false
-        }}
-      />
-      <Tab.Screen
         name="Cart"
         component={CartScreen}
         options={{
           tabBarIcon: ({color}) => (
             <Icon name="shopping-cart" color={color} size={28} />
+          ),headerShown:false
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={HomeScreen}
+        options={{
+          tabBarIcon: ({color}) => (
+            <Icon name="person" color={color} size={28} />
           ),headerShown:false
         }}
       />
