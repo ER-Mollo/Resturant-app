@@ -44,11 +44,11 @@ const BottomNavigator = () => {
 
 
       <Tab.Screen
-        name="Favorite"
+        name="fav"
         component={CartScreen}
         options={{
           tabBarIcon: ({color}) => (
-            <Icon name="favorite" color={color} size={28} />
+            <Icon name="shopping-cart" color={color} size={28} />
           ),headerShown:false
         }}
       />
@@ -76,7 +76,7 @@ const BottomNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Cart"
+        name="cart"
         component={CartScreen}
         options={{
           tabBarIcon: ({color}) => (

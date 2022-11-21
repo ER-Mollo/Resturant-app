@@ -1,5 +1,7 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet, View, Text, Image,ScrollView} from 'react-native';
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from '../config/firebase';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLORS from '../const/color';
 import {SecondaryButton} from '../const/Button';
@@ -35,7 +37,7 @@ const DetailsScreen = ({navigation, route}) => {
               alignItems: 'center',
             }}>
             <Text
-              style={{fontSize: 25, fontWeight: 'bold', color: COLORS.white}}>
+              style={{fontSize: 25, fontWeight: 'bold', color: COLORS.dark}}>
               {food.name}
             </Text>
             <View style={style.iconContainer}>
@@ -43,11 +45,7 @@ const DetailsScreen = ({navigation, route}) => {
             </View>
           </View>
           <Text style={style.detailsText}>
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book. It has survived not
-            only five centuries.
+            {food.ingridients}
           </Text>
           <View style={{marginTop: 40, marginBottom: 40}}>
             <SecondaryButton title="Add To Cart" onPress={addToCart}/>
@@ -74,7 +72,7 @@ const style = StyleSheet.create({
     borderTopLeftRadius: 40,
   },
   iconContainer: {
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.dark,
     height: 50,
     width: 50,
     justifyContent: 'center',
@@ -85,7 +83,7 @@ const style = StyleSheet.create({
     marginTop: 10,
     lineHeight: 22,
     fontSize: 16,
-    color: COLORS.white,
+    color: COLORS.dark,
   },
 });
 

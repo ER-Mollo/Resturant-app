@@ -13,6 +13,7 @@ import { PrimaryButton } from '../const/Button';
 const CartScreen = ({navigation}) => {
   const [foods,setFoods]= React.useState([]);
   const [num,setnum]=React.useState(1);
+  const [prices,setPrices]=React.useState([]);
   
 
   let count = 1
@@ -34,19 +35,31 @@ const CartScreen = ({navigation}) => {
     let data = await getDocs(cartRef);
       setFoods(data.docs.map((doc)=>({...doc.data(),id: doc.id})))
 
-      // console.log(foodRef);
-    
-   
+      setPrices(data.docs.map((doc)=>(doc.data().price)));
 
+      
       
     }
 
+    const sum = prices.reduce((partialSum, a) => partialSum + a, 0)
+    console.log(sum);
 
-    const up = async()=>{
-      // count = count+1
-      // console.log(count)
-       setnum(count+1)
-      console.log(num)
+    const deleteFood = async(id)=>{
+
+      console.log(cartRef,id);
+      let task = doc(cartRef,id);
+      console.log('task: ')
+      // return
+      await deleteDoc(task).then(
+          promise => {
+              alert("deleted");
+              getItems();
+          }
+      ).catch()
+      getItems();
+
+
+      
     }
 
 
@@ -54,7 +67,7 @@ const CartScreen = ({navigation}) => {
     React.useEffect(()=>{
       console.log("some")
       getItems();
-      console.log(getItems());
+      console.log(prices);
       
      }, [])
 
@@ -77,11 +90,9 @@ const CartScreen = ({navigation}) => {
         </View>
         <View style={{marginRight: 20, alignItems: 'center'}}>
           
-          <View style={style.actionBtn}>
-            <TouchableOpacity onPress={up}><Icon name="add" size={25} color={COLORS.white} /></TouchableOpacity>
-            <Text style={{fontWeight: 'bold', fontSize: 18,textAlign:'center'}}>{item.num}</Text>
+          <TouchableOpacity style={style.actionBtn} onPress={() => deleteFood(item.id)}>
             <Icon name="remove" size={25} color={COLORS.white} />
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -109,7 +120,7 @@ const CartScreen = ({navigation}) => {
               <Text style={{fontSize: 18, fontWeight: 'bold',color:COLORS.white}}>
                 Total Price
               </Text>
-              <Text style={{fontSize: 18, fontWeight: 'bold',color:COLORS.white}}>$50</Text>
+              <Text style={{fontSize: 18, fontWeight: 'bold',color:COLORS.white}}>R{sum}</Text>
             </View>
             <View style={{marginHorizontal: 30}}>
               <PrimaryButton title="CHECKOUT" />
@@ -141,7 +152,7 @@ const style = StyleSheet.create({
   actionBtn: {
     width: 40,
     height: 90,
-    backgroundColor: COLORS.primary,
+    backgroundColor: 'rgb(238, 75, 43)',
     borderRadius: 30,
     paddingHorizontal: 5,
     flexDirection: 'column',
